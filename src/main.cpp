@@ -53,8 +53,11 @@ int main(int argc, char **argv)
 {
     qputenv("QT_IM_MODULE", QByteArray("qtvirtualkeyboard"));
 
-    //do not use any plugins installed on the device
+    // do not use any plugins installed on the device
     qputenv("QML2_IMPORT_PATH", QByteArray());
+    
+    // use material style for QtQuick Controls 2
+    qputenv("QT_QUICK_CONTROLS_STYLE", QByteArray("Material"));
 
     // We use touch mocking on desktop and apply all the mobile switches.
     QByteArrayList args = QByteArrayList()
