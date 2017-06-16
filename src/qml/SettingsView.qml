@@ -29,8 +29,7 @@
 
 import QtQuick 2.5
 import QtQuick.Layouts 1.0
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
+import QtQuick.Controls 2.0
 import Qt.labs.settings 1.0
 
 import WebBrowser 1.0
@@ -100,61 +99,33 @@ Rectangle {
 
     ListView {
         id: listView
-        leftMargin: 230
-        rightMargin: leftMargin
         anchors.fill: parent
         model: listModel
-        delegate: Rectangle {
-            height: 100
-            width: 560
-            Text {
+        delegate: ItemDelegate {
+            width: parent.width
+            height: 60
+            Label {
                 anchors.verticalCenter: parent.verticalCenter
-                font.family: defaultFontFamily
-                font.pixelSize: 28
+                font.pixelSize: 20
                 text: name
                 color: sw.enabled ? "black" : "#929495"
             }
-            Rectangle {
-                anchors {
-                    right: parent.right
-                    verticalCenter: parent.verticalCenter
+            Switch {
+                id: sw
+                enabled: {
+                    var ok = appSettings[index].name.indexOf("Disk Cache") < 0
+                    return ok || !privateBrowsingEnabled
                 }
-                Switch {
-                    id: sw
-                    enabled: {
-                        var ok = appSettings[index].name.indexOf("Disk Cache") < 0
-                        return ok || !privateBrowsingEnabled
-                    }
-                    anchors.centerIn: parent
-                    checked: {
-                        if (enabled)
-                            return active
-                        return false
-                    }
-                    onClicked: {
-                        var setting = appSettings[index]
-                        setting.active = checked
-                        setting.notify(checked)
-                    }
-                    style: SwitchStyle {
-                        handle: Rectangle {
-                            width: 42
-                            height: 42
-                            radius: height / 2
-                            color: "white"
-                            border.color: control.checked ? "#5caa14" : "#9b9b9b"
-                            border.width: 1
-                        }
-
-                        groove: Rectangle {
-                            implicitWidth: 72
-                            height: 42
-                            radius: height / 2
-                            border.color: control.checked ? "#5caa14" : "#9b9b9b"
-                            color: control.checked ? "#5cff14" : "white"
-                            border.width: 1
-                        }
-                    }
+                anchors.right: parent.right
+                checked: {
+                    if (enabled)
+                        return active
+                    return false
+                }
+                onClicked: {
+                    var setting = appSettings[index]
+                    setting.active = checked
+                    setting.notify(checked)
                 }
             }
         }
